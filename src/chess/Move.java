@@ -14,6 +14,7 @@ public class Move {
         this.start = start;
         this.end = end;
         this.pieceMoved = start.getPiece();
+        this.pieceKilled = end.getPiece();
     }
 
     public boolean isCastlingMove()
@@ -24,5 +25,21 @@ public class Move {
     public void setCastlingMove(boolean castlingMove)
     {
         this.castlingMove = castlingMove;
+    }
+
+    public Piece getPieceMoved() {
+        return pieceMoved;
+    }
+
+    public Piece getPieceKilled() {
+        return pieceKilled;
+    }
+
+    public Space getStart() {
+        return start;
+    }
+
+    public Space getEnd() {
+        return end;
     }
 }

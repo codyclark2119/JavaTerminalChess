@@ -27,6 +27,7 @@ public class King extends Piece {
         }
         int x = Math.abs(start.getX() - end.getX());
         int y = Math.abs(start.getY() - end.getY());
+        //Checks to make sure it didn't move more than one space in either direction
         if (x <= 1 && y <= 1) {
             // Need to write check for if other pieces put the king in check
             return true;

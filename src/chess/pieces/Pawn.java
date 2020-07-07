@@ -22,6 +22,7 @@ public class Pawn extends Piece {
             if(end.getPiece() != null){
                 return true;
             }
+            //If Y is greater than 0 and there is no enemy piece returns false
             return false;
         }
 

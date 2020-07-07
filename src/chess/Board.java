@@ -25,10 +25,11 @@ public class Board {
         }
     }
 
-    public Space getBox(int x, int y) throws Exception {
+    public Space getBox(int x, int y) {
 
         if (x < 0 || x > 7 || y < 0 || y > 7) {
-            throw new Exception("Index out of bounds");
+            System.out.println("Index out of bounds");
+            return null;
         }
 
         return spaces[x][y];
