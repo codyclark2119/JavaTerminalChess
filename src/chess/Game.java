@@ -1,14 +1,15 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private Player[] players;
-    private Board board;
+    private Player[] players = new Player[2];
+    private Board board = new Board();
     private Player currentTurn;
-    private List<Move> movesPlayed;
+    private List<Move> movesPlayed = new ArrayList();
 
-    private void initialize(Player p1, Player p2)
+    public void initialize(Player p1, Player p2)
     {
         //Setting players
         players[0] = p1;
@@ -22,8 +23,10 @@ public class Game {
         else {
             this.currentTurn = p2;
         }
-        //Clearing any previous game moves
-        movesPlayed.clear();
+        //Clearing any previous game moves.
+        if(movesPlayed.size() > 0){
+            movesPlayed.clear();
+        }
     }
 
     public boolean playerMove(Player player, int startX,

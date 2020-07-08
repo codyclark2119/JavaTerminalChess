@@ -12,8 +12,10 @@ public class Pawn extends Piece {
     @Override
     public boolean canMove(Board board, Space start, Space end){
         //Check if there is a piece of the same color in the end space
-        if(end.getPiece().isWhite() == this.isWhite()){
-            return false;
+        if(end.getPiece() != null){
+            if(this.isWhite() == end.getPiece().isWhite()){
+                return false;
+            }
         }
         int x = Math.abs(start.getX() - end.getX());
         int y = Math.abs(start.getY() - end.getY());

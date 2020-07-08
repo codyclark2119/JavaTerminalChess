@@ -3,7 +3,7 @@ package chess;
 import chess.pieces.Pawn;
 
 public class Board {
-    Space[][] spaces;
+    Space[][] spaces = new Space[8][8];
 
     public void resetBoard(){
         //Set Major characters
@@ -15,7 +15,7 @@ public class Board {
         }
         //Black side
         for (int b = 0; b < 8; b++) {
-            spaces[1][b] = new Space(1, b, new Pawn(true));
+            spaces[6][b] = new Space(6, b, new Pawn(true));
         }
         //Set Empty spaces
         for (int i = 2; i < 6; i++) {
