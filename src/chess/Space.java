@@ -34,4 +34,24 @@ public class Space {
     public void setPiece(Piece piece) {
         this.piece = piece;
     }
+
+    @Override
+    public String toString(){
+        String spaceString = "|";
+        if (this.piece == null){
+            spaceString += "  |";
+        } else {
+            switch(this.piece.getName()){
+                case "Pawn":
+                    if(this.piece.isWhite()){
+                        spaceString += "WP|";
+                    } else {
+                        spaceString += "BP|";
+                    }
+                    break;
+
+            }
+        }
+        return spaceString;
+    }
 }

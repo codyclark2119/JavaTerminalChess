@@ -28,10 +28,10 @@
 <h2>
     3. Executing the Plan
 </h2>
-*
-*
-*
-*
+*I set up the basic structure for the pieces through an abstract class as it'll be a perfect template for all of major pieces.
+*After that i focused on creating and populating the board with spaces that can hold pieces. I started with the pawns as my first
+*piece to make sure im moving them around on the board correctly and creating validation with the most basic movement before diving into the specialized movements.
+*I created the main then and started by testing the movement and the move list tracking for checking for castling down the line.
 *
 *
 *

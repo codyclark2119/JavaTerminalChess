@@ -43,4 +43,16 @@ public class Board {
 
         return spaces[x][y];
     }
+
+    @Override
+    public String toString(){
+        String boardDisplay = new String();
+        for (int sx = 0; sx < 8; sx++) {
+            for (int sy = 0; sy < 8; sy++) {
+                boardDisplay += spaces[sx][sy].toString();
+            }
+            boardDisplay += "\n";
+        }
+        return boardDisplay;
+    }
 }

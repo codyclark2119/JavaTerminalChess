@@ -15,6 +15,7 @@ public class Game {
         players[1] = p2;
         //Resetting the board
         board.resetBoard();
+        displayBoard();
         //Setting initial turn for whoever picked white side
         if (p1.isWhiteSide()) {
             this.currentTurn = p1;
@@ -31,6 +32,10 @@ public class Game {
         for(int i = 0; i < movesPlayed.size(); i++){
             System.out.println(movesPlayed.get(i).toString());
         }
+    }
+
+    public void displayBoard(){
+        System.out.println(board.toString());
     }
 
     public boolean playerMove(Player player, int startX, int startY, int endX, int endY) {
@@ -83,7 +88,7 @@ public class Game {
         } else {
             this.currentTurn = players[0];
         }
-
+        displayBoard();
         return true;
     }
 }
