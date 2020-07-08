@@ -42,4 +42,16 @@ public class Move {
     public Space getEnd() {
         return end;
     }
+
+    @Override
+    public String toString(){
+        String moveString = "";
+        if(this.pieceMoved.isWhite()){
+            moveString += "White " + this.pieceMoved.getName();
+        } else {
+            moveString += "Black " + this.pieceMoved.getName();
+        }
+        moveString += " moves from (" + start.getX() +","+ start.getY() + ")" + " to (" + end.getX() +","+ end.getY() + ")";
+        return moveString;
+    }
 }

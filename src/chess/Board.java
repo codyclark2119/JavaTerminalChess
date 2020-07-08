@@ -8,6 +8,15 @@ public class Board {
     public void resetBoard(){
         //Set Major characters
 
+        //Empty Spaces for tests
+        for (int wt = 0; wt < 8; wt++) {
+            spaces[0][wt] = new Space(0, wt, null);
+        }
+
+        for (int bt = 0; bt < 8; bt++) {
+            spaces[7][bt] = new Space(8, bt, null);
+        }
+
         //Set Pawns
         //White side
         for (int w = 0; w < 8; w++) {
@@ -15,7 +24,7 @@ public class Board {
         }
         //Black side
         for (int b = 0; b < 8; b++) {
-            spaces[6][b] = new Space(6, b, new Pawn(true));
+            spaces[6][b] = new Space(6, b, new Pawn(false));
         }
         //Set Empty spaces
         for (int i = 2; i < 6; i++) {
