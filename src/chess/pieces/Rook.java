@@ -22,11 +22,6 @@ public class Rook extends Piece {
                 System.out.println("Space Occupied");
                 return false;
             }
-            //If end point is occupied by enemy piece attacks
-            else {
-                System.out.println("Successful Attack");
-                return true;
-            }
         }
         //If the rook has been moved only along the x axis successful
         if(x > 0 && y == 0){

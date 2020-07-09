@@ -23,11 +23,6 @@ public class Knight extends Piece {
                 System.out.println("Space Occupied");
                 return false;
             }
-            //If end point is occupied by enemy piece attacks
-            else {
-                System.out.println("Successful Attack");
-                return true;
-            }
         }
         //Checking for valid movement
         //If x changes by two and y by 1 Successful

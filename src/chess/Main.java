@@ -16,8 +16,8 @@ public class Main {
         newGame.playerMove(p2, 6, 1, 4, 1);
         //Move white knight to attack
         newGame.playerMove(p1, 2, 0, 4, 1);
-        //Move black rook to test
-        newGame.playerMove(p2, 7, 0, 3, 0);
+        //Move black queen to test
+        newGame.playerMove(p2, 7, 4, 2, 0);
 
 
         newGame.listMoves();

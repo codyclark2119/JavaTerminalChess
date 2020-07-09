@@ -63,6 +63,20 @@ public class Space {
                         spaceString += "BR|";
                     }
                     break;
+                case "Bishop":
+                    if(this.piece.isWhite()){
+                        spaceString += "WB|";
+                    } else {
+                        spaceString += "BB|";
+                    }
+                    break;
+                case "Queen":
+                    if(this.piece.isWhite()){
+                        spaceString += "WQ|";
+                    } else {
+                        spaceString += "BQ|";
+                    }
+                    break;
             }
         }
         return spaceString;
