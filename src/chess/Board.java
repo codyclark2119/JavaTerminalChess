@@ -2,6 +2,7 @@ package chess;
 
 import chess.pieces.Knight;
 import chess.pieces.Pawn;
+import chess.pieces.Rook;
 
 public class Board {
     Space[][] spaces = new Space[8][8];
@@ -12,16 +13,22 @@ public class Board {
         for (int wm = 0; wm < 8; wm++) {
             if (wm == 1 || wm == 6) {
                 spaces[0][wm] = new Space(0, wm, new Knight(true));
-            } else {
+            } else if(wm == 0 || wm == 7){
+                spaces[0][wm] = new Space(0, wm, new Rook(true));
+            }
+            else {
                 spaces[0][wm] = new Space(0, wm, null);
             }
         }
         //Black
         for (int bm = 0; bm < 8; bm++) {
             if(bm == 1 || bm == 6) {
-                spaces[7][bm] = new Space(0, bm, new Knight(false));
-            } else {
-                spaces[7][bm] = new Space(0, bm, null);
+                spaces[7][bm] = new Space(7, bm, new Knight(false));
+            }  else if(bm == 0 || bm == 7){
+                spaces[7][bm] = new Space(7, bm, new Rook(false));
+            }
+            else {
+                spaces[7][bm] = new Space(7, bm, null);
             }
         }
 

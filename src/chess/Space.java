@@ -56,6 +56,13 @@ public class Space {
                         spaceString += "BK|";
                     }
                     break;
+                case "Rook":
+                    if(this.piece.isWhite()){
+                        spaceString += "WR|";
+                    } else {
+                        spaceString += "BR|";
+                    }
+                    break;
             }
         }
         return spaceString;
