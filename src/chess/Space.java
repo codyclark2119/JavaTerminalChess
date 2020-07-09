@@ -49,7 +49,13 @@ public class Space {
                         spaceString += "BP|";
                     }
                     break;
-
+                case "Knight":
+                    if(this.piece.isWhite()){
+                        spaceString += "WK|";
+                    } else {
+                        spaceString += "BK|";
+                    }
+                    break;
             }
         }
         return spaceString;

@@ -1,5 +1,6 @@
 package chess;
 
+import chess.pieces.Knight;
 import chess.pieces.Pawn;
 
 public class Board {
@@ -7,14 +8,21 @@ public class Board {
 
     public void resetBoard(){
         //Set Major characters
-
-        //Empty Spaces for tests
-        for (int wt = 0; wt < 8; wt++) {
-            spaces[0][wt] = new Space(0, wt, null);
+        //White
+        for (int wm = 0; wm < 8; wm++) {
+            if (wm == 1 || wm == 6) {
+                spaces[0][wm] = new Space(0, wm, new Knight(true));
+            } else {
+                spaces[0][wm] = new Space(0, wm, null);
+            }
         }
-
-        for (int bt = 0; bt < 8; bt++) {
-            spaces[7][bt] = new Space(8, bt, null);
+        //Black
+        for (int bm = 0; bm < 8; bm++) {
+            if(bm == 1 || bm == 6) {
+                spaces[7][bm] = new Space(0, bm, new Knight(false));
+            } else {
+                spaces[7][bm] = new Space(0, bm, null);
+            }
         }
 
         //Set Pawns
@@ -47,12 +55,21 @@ public class Board {
     @Override
     public String toString(){
         String boardDisplay = new String();
+        //Building out spaces and numbering the X-axis
+        boardDisplay += "---------------------------------\n";
         for (int sx = 0; sx < 8; sx++) {
+            boardDisplay += sx;
             for (int sy = 0; sy < 8; sy++) {
                 boardDisplay += spaces[sx][sy].toString();
             }
             boardDisplay += "\n";
         }
+        boardDisplay += " --------------------------------\n ";
+        for (int dy = 0; dy < 8; dy++){
+            boardDisplay += "| " + dy + "|";
+        }
+        boardDisplay += "\n---------------------------------\n";
+
         return boardDisplay;
     }
 }
