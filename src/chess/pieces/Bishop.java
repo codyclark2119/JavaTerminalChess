@@ -13,10 +13,12 @@ public class Bishop extends Piece {
     public boolean canMove(Board board, Space start, Space end){
         //Getting the difference between coordinates passed to check if
         //movement amount is valid
-        int x = Math.abs(start.getX() - end.getX());
-        int y = Math.abs(start.getY() - end.getY());
+        int x = start.getX() - end.getX();
+        int y = start.getY() - end.getY();
+
+        System.out.println(x+","+ y);
         //Bishop must always make an equal value change in each axis
-        if(x == y && x > 0 ){
+        if(Math.abs(x) == Math.abs(y)){
             System.out.println("Successful move");
             return true;
         }

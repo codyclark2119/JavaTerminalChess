@@ -48,33 +48,6 @@ public class Game {
         return this.makeMove(move, player);
     }
 
-    public void checkCollision(Move move){
-        Space startSpace = move.getStart();
-        Space endSpace = move.getEnd();
-        int x = startSpace.getX() - endSpace.getX();
-        int y = startSpace.getY() - endSpace.getY();
-        if (x < 0){
-            for(int xc = (startSpace.getX() + 1); xc < (Math.abs(x) + startSpace.getX()); xc++){
-                for(int yc = (startSpace.getY() + 1); yc < (Math.abs(y) + startSpace.getY()); yc++) {
-
-                    Space boxCheck = board.getBox(xc, yc);
-                    if (boxCheck.getPiece() != null) {
-                        System.out.println("Piece found at (" + xc + ",yc)");
-                    }
-                }
-            }
-        } else {
-            for(int d = (startSpace.getX() - 1); d >= (startSpace.getX() - x); d--){
-                Space boxCheck = board.getBox(d, 0);
-                if(boxCheck.getPiece() != null){
-                    System.out.println("Piece found at (" + d + ",0)");
-                }
-            }
-        }
-        System.out.println(x);
-        System.out.println(y);
-    }
-
     private boolean makeMove(Move move, Player player) {
         //Getting the piece being moved
         Piece chosenPiece = move.getPieceMoved();
@@ -108,7 +81,6 @@ public class Game {
             System.out.println("Space Occupied");
             return false;
         }
-        checkCollision(move);
         // store the move in a list
         movesPlayed.add(move);
         // move piece from the stat box to end box
