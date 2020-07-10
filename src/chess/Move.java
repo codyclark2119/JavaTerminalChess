@@ -5,7 +5,7 @@ public class Move {
     private Space start;
     private Space end;
     private Piece pieceMoved;
-    private Piece pieceKilled;
+    private Piece pieceEnd;
     private boolean castlingMove = false;
 
     public Move(Player player, Space start, Space end)
@@ -14,7 +14,7 @@ public class Move {
         this.start = start;
         this.end = end;
         this.pieceMoved = start.getPiece();
-        this.pieceKilled = end.getPiece();
+        this.pieceEnd = end.getPiece();
     }
 
     public boolean isCastlingMove()
@@ -31,8 +31,8 @@ public class Move {
         return pieceMoved;
     }
 
-    public Piece getPieceKilled() {
-        return pieceKilled;
+    public Piece getPieceEnd() {
+        return pieceEnd;
     }
 
     public Space getStart() {
