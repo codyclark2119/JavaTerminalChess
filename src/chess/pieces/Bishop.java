@@ -17,7 +17,6 @@ public class Bishop extends Piece {
         int y = end.getY() - start.getY();
         int checkX = start.getX();
         int checkY = start.getY();
-        System.out.println(x+","+ y);
         //Bishop must always make an equal value change in each axis
         if(Math.abs(x) == Math.abs(y)){
             for(int m = 0; m < Math.abs(x); m++){
@@ -41,7 +40,11 @@ public class Bishop extends Piece {
                 if(board.getBox(checkX,checkY).getPiece() != null){
                     //Check for same color in the way to the end space chosen
                     if(board.getBox(checkX,checkY).getPiece().isWhite() == this.isWhite()){
-                        System.out.println(board.getBox(checkX,checkY).getPiece().isWhite() + " at (" + checkX + ","+ checkY + ")");
+                        System.out.println(board.getBox(checkX,checkY).getPiece().getName() + " at (" + checkX + ","+ checkY + ")");
+                        return false;
+                    }
+                    else if(board.getBox(checkX,checkY).getPiece().isWhite() != this.isWhite() && checkX != end.getX()){
+                        System.out.println(board.getBox(checkX,checkY).getPiece().getName() + " at (" + checkX + ","+ checkY + ")");
                         return false;
                     }
                 }

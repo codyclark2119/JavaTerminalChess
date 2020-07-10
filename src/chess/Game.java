@@ -53,22 +53,22 @@ public class Game {
         Piece chosenPiece = move.getPieceMoved();
         //Checking if piece exists
         if (chosenPiece == null) {
-            System.out.println("Null Piece");
+            System.out.println("Null Piece\n");
             return false;
         }
         //Checking if it is that players turn
         if (player != currentTurn) {
-            System.out.println("Out of turn");
+            System.out.println("Out of turn\n");
             return false;
         }
         //Making sure the piece belongs to the player
         if (chosenPiece.isWhite() != player.isWhiteSide()) {
-            System.out.println("Not your piece");
+            System.out.println("Not your piece\n");
             return false;
         }
         //Checks to see if the move is valid according the the pieces pattern
         if (!chosenPiece.canMove(board, move.getStart(), move.getEnd())) {
-            System.out.println("Not valid move");
+            System.out.println("Not valid move\n");
             return false;
         }
         //Check for if there is an enemy piece in the end space
@@ -78,7 +78,7 @@ public class Game {
             endPiece.setKilled(true);
         } else if(endPiece != null && chosenPiece.isWhite() == endPiece.isWhite()){
             //Prevents moving into a space already occupied by the same color
-            System.out.println("Space Occupied");
+            System.out.println("Space Occupied\n");
             return false;
         }
         // store the move in a list
