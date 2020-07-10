@@ -7,11 +7,12 @@ public class Main {
         Player p2 = new Player(false);
         newGame.initialize(p1, p2);
         //Move black rook to test
-        newGame.playerMove(p1, 0, 2, 2, 0);
+        newGame.playerMove(p1, 1, 1, 3, 1);
         //Move black rook to test
-        newGame.playerMove(p2, 7, 2, 5, 0);
-        newGame.playerMove(p1, 0, 5, 2, 7);
-        newGame.playerMove(p2, 7, 5, 5, 7);
+        newGame.playerMove(p2, 7, 1, 5, 2);
+        newGame.playerMove(p1, 0, 2, 1, 1);
+        newGame.playerMove(p2, 5, 2, 3, 1);
+        newGame.playerMove(p1, 1, 1, 6, 6);
 
 
         newGame.listMoves();
