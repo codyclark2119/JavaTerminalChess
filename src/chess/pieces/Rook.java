@@ -59,7 +59,7 @@ public class Rook extends Piece {
                         System.out.println(board.getBox(checkX,checkY).getPiece().getName() + " at (" + checkX + ","+ checkY + ")");
                         return false;
                     }
-                    else if(board.getPiece(checkX,checkY).isWhite() != this.isWhite() && checkX != end.getX()){
+                    else if(board.getPiece(checkX,checkY).isWhite() != this.isWhite() && checkY != end.getY()){
                         System.out.println(board.getBox(checkX,checkY).getPiece().getName() + " at (" + checkX + ","+ checkY + ")");
                         return false;
                     }
