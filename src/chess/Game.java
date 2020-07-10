@@ -81,6 +81,7 @@ public class Game {
             System.out.println("Space Occupied\n");
             return false;
         }
+        System.out.println(board.checkCheck(board, player));
         // store the move in a list
         movesPlayed.add(move);
         // move piece from the stat box to end box

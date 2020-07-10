@@ -7,8 +7,9 @@ import chess.Space;
 public class King extends Piece {
     private boolean castling = false;
 
-    public King(boolean white){
-        super(white);
+    public King(boolean white, int x, int y){
+        super(white, x, y);
+        this.setName("King");
     }
 
     public boolean isCastling() {
@@ -21,19 +22,24 @@ public class King extends Piece {
 
     @Override
     public boolean canMove(Board board, Space start, Space end){
-        //Check if there is a piece of the same color in the end space
-        if(end.getPiece().isWhite() == this.isWhite()){
-            return false;
-        }
-        int x = Math.abs(start.getX() - end.getX());
-        int y = Math.abs(start.getY() - end.getY());
-        //Checks to make sure it didn't move more than one space in either direction
-        if (x <= 1 && y <= 1) {
-            // Need to write check for if other pieces put the king in check
+        //Getting the difference between coordinates passed to check if
+        //movement amount is valid
+        int x = end.getX() - start.getX();
+        int y = end.getY() - start.getY();
+        if(Math.abs(x) <= 1 && Math.abs(y) <= 1){
+            if(!this.diagonalMoveCheck(board, start, end)){
+                return false;
+            }
+            else if(!this.verticalMoveCheck(board, start, end)){
+                return false;
+            }
+            else if(!this.horizontalMoveCheck(board, start, end)){
+                return false;
+            }
+            System.out.println("Successful Move");
             return true;
         }
-
+        System.out.println("Invalid Move");
         return false;
     }
-
 }

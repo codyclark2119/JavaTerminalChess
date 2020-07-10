@@ -6,8 +6,8 @@ import chess.Space;
 
 public class Pawn extends Piece {
 
-    public Pawn(boolean white){
-        super(white);
+    public Pawn(boolean white, int x, int y){
+        super(white, x, y);
         this.setName("Pawn");
     }
 
@@ -15,45 +15,40 @@ public class Pawn extends Piece {
     public boolean canMove(Board board, Space start, Space end){
         //Getting the difference between coordinates passed to check if
         //movement amount is valid
-        int x = start.getX() - end.getX();
-        int y = start.getY() - end.getY();
-        //Check if there is a piece of the same color in the end space
-        if(end.getPiece() != null){
-            //Prevents moving into a space already occupied by the same color
-            if(this.isWhite() == end.getPiece().isWhite() || y == 0){
-                System.out.println("Space Occupied");
+        int x = end.getX() - start.getX();
+        int y = end.getY() - start.getY();
+        //Prevents a piece from moving across the y axis
+        //and there is no enemy piece
+        if (y != 0 && Math.abs(y) == 1) {
+            if (!this.diagonalMoveCheck(board, start, end)) {
                 return false;
             }
         }
-        //Prevents a piece from moving across the y axis
-        //and there is no enemy piece
-        if (y != 0) {
-            //Checks if end point is occupied by enemy pieces
-            if(this.isWhite() != end.getPiece().isWhite()){
-                System.out.println("Successful Attack");
-                return true;
-            }
-            System.out.println("Invalid move");
-            return false;
-        }
         //Checking for valid first pawn two space movement
-        //White
-        if(start.getX() == 1 && this.isWhite() && x == -2){
-            System.out.println("Successful move");
-            return true;
-        }
-        //Black
-        if(start.getX() == 6 && this.isWhite() && x == 2){
-            System.out.println("Successful move");
-            return true;
+        if(Math.abs(x) >= 2){
+            //White
+            if(start.getX() == 1 && this.isWhite()){
+                if (this.verticalMoveCheck(board, start, end)) {
+                    return true;
+                }
+            }
+            //Black
+            else if(start.getX() == 6 && this.isWhite() == false){
+                if (this.verticalMoveCheck(board, start, end)) {
+                    return true;
+                }
+            } else {
+                System.out.println("Cannot move more than two spaces");
+                return false;
+            }
         }
         //Prevents white backwards moving
-        if(this.isWhite() && x >= 1){
+        if(this.getName() == "White" && x <= 1){
             System.out.println("Backwards moving not allowed");
             return false;
         }
         //Prevents black backwards moving
-        if(this.isWhite() == false && x <= -1){
+        if(this.getName() == "Black" && x >= -1){
             System.out.println("Backwards moving not allowed");
             return false;
         }

@@ -51,9 +51,9 @@ public class Space {
                     break;
                 case "Knight":
                     if(this.piece.isWhite()){
-                        spaceString += "WK|";
+                        spaceString += "WN|";
                     } else {
-                        spaceString += "BK|";
+                        spaceString += "BN|";
                     }
                     break;
                 case "Rook":
@@ -75,6 +75,13 @@ public class Space {
                         spaceString += "WQ|";
                     } else {
                         spaceString += "BQ|";
+                    }
+                    break;
+                case "King":
+                    if(this.piece.isWhite()){
+                        spaceString += "WK|";
+                    } else {
+                        spaceString += "BK|";
                     }
                     break;
             }

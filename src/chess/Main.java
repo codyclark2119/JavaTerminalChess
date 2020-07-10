@@ -10,12 +10,9 @@ public class Main {
         newGame.playerMove(p1, 1, 3, 3, 3);
         //Black pawn move success
         newGame.playerMove(p2, 6, 0, 4, 0);
-        //White queen move diagonal success
-        newGame.playerMove(p1, 0, 4, 4, 0);
-        //Black pawn move success
-        newGame.playerMove(p2, 6, 1, 4, 1);
-        //White queen move horizontal success
-        newGame.playerMove(p1, 4, 0, 2, 0);
+        //White pawn move fail
+        newGame.playerMove(p1, 3, 3, 5, 3);
+
         newGame.listMoves();
     }
 }
