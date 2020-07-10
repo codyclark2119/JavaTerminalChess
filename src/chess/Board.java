@@ -65,6 +65,16 @@ public class Board {
         return spaces[x][y];
     }
 
+    public Piece getPiece(int x, int y) {
+
+        if (x < 0 || x > 7 || y < 0 || y > 7) {
+            System.out.println("Index out of bounds");
+            return null;
+        }
+
+        return spaces[x][y].getPiece();
+    }
+
     @Override
     public String toString(){
         String boardDisplay = new String();
