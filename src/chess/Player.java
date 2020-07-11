@@ -1,10 +1,18 @@
 package chess;
 
 public class Player {
-    public boolean whiteSide;
-
+    private boolean whiteSide;
+    private boolean inCheck = false;
     public Player(boolean whiteSide){
         this.whiteSide = whiteSide;
+    }
+
+    public boolean isInCheck() {
+        return inCheck;
+    }
+
+    public void setInCheck(boolean inCheck) {
+        this.inCheck = inCheck;
     }
 
     public boolean isWhiteSide()
