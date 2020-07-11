@@ -12,4 +12,10 @@ public class Player {
         return this.whiteSide == true;
     }
 
+    public String getColor(){
+        if(this.whiteSide){
+            return "White";
+        }
+        return "Black";
+    }
 }

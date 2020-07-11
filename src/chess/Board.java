@@ -22,20 +22,25 @@ public class Board {
         //White
         for (int wm = 0; wm < 8; wm++) {
             if(wm == 0 || wm == 7){
-                this.pieces.add(new Rook(true, 0 , wm));
-                this.spaces[0][wm] = new Space(0, wm, new Rook(true, 0 , wm));
+                Rook whiteRook = new Rook(true, 0 , wm);
+                this.pieces.add(whiteRook);
+                this.spaces[0][wm] = new Space(0, wm, whiteRook);
             } else if (wm == 1 || wm == 6) {
-                this.pieces.add(new Knight(true, 0 , wm));
-                this.spaces[0][wm] = new Space(0, wm, new Knight(true, 0, wm));
+                Knight whiteKnight = new Knight(true, 0 , wm);
+                this.pieces.add(whiteKnight);
+                this.spaces[0][wm] = new Space(0, wm, whiteKnight);
             } else if(wm == 2 || wm == 5){
-                this.pieces.add(new Bishop(true, 0 , wm));
-                this.spaces[0][wm] = new Space(0, wm, new Bishop(true, 0, wm));
+                Bishop whiteBishop = new Bishop(true, 0 , wm);
+                this.pieces.add(whiteBishop);
+                this.spaces[0][wm] = new Space(0, wm, whiteBishop);
             } else if(wm == 4){
-                this.pieces.add(new Queen(true, 0 , wm));
-                this.spaces[0][wm] = new Space(0, wm, new Queen(true, 0, wm));
+                Queen whiteQueen = new Queen(true, 0 , wm);
+                this.pieces.add(whiteQueen);
+                this.spaces[0][wm] = new Space(0, wm, whiteQueen);
             } else if(wm == 3){
-                this.pieces.add(new King(true, 0 , wm));
-                this.spaces[0][wm] = new Space(0, wm, new King(true, 0, wm));
+                King whiteKing = new King(true, 0 , wm);
+                this.pieces.add(whiteKing);
+                this.spaces[0][wm] = new Space(0, wm, whiteKing);
             }
             else {
                 this.spaces[0][wm] = new Space(0, wm, null);
@@ -44,20 +49,25 @@ public class Board {
         //Black
         for (int bm = 0; bm < 8; bm++) {
             if(bm == 0 || bm == 7){
-                this.pieces.add(new Rook(false, 7 , bm));
-                this.spaces[7][bm] = new Space(7, bm, new Rook(false, 7, bm));
+                Rook blackRook = new Rook(false, 7 , bm);
+                this.pieces.add(blackRook);
+                this.spaces[7][bm] = new Space(7, bm, blackRook);
             } else if(bm == 1 || bm == 6) {
-                this.pieces.add(new Knight(false, 7 , bm));
-                this.spaces[7][bm] = new Space(7, bm, new Knight(false, 7, bm));
+                Knight blackKnight = new Knight(false, 7 , bm);
+                this.pieces.add(blackKnight);
+                this.spaces[7][bm] = new Space(7, bm, blackKnight);
             } else if(bm == 2 || bm == 5){
-                this.pieces.add(new Bishop(false, 7 , bm));
-                this.spaces[7][bm] = new Space(7, bm, new Bishop(false, 7, bm));
+                Bishop blackBishop = new Bishop(false, 7 , bm);
+                this.pieces.add(blackBishop);
+                this.spaces[7][bm] = new Space(7, bm, blackBishop);
             } else if(bm == 4){
-                this.pieces.add(new Queen(false, 7 , bm));
-                this.spaces[7][bm] = new Space(7, bm, new Queen(false, 7, bm));
+                Queen blackQueen = new Queen(false, 7 , bm);
+                this.pieces.add(blackQueen);
+                this.spaces[7][bm] = new Space(7, bm, blackQueen);
             } else if(bm == 3){
-                this.pieces.add(new King(false, 7 , bm));
-                this.spaces[7][bm] = new Space(7, bm, new King(false, 7, bm));
+                King blackKing = new King(false, 7 , bm);
+                this.pieces.add(blackKing);
+                this.spaces[7][bm] = new Space(7, bm, blackKing);
             }
             else {
                 this.spaces[7][bm] = new Space(7, bm, null);
@@ -67,13 +77,15 @@ public class Board {
         //Set Pawns
         //White side
         for (int w = 0; w < 8; w++) {
-            this.pieces.add(new Pawn(true, 1 , w));
-            this.spaces[1][w] = new Space(1, w, new Pawn(true, 1, w));
+            Pawn whitePawn = new Pawn(true, 1 , w);
+            this.pieces.add(whitePawn);
+            this.spaces[1][w] = new Space(1, w, whitePawn);
         }
         //Black side
         for (int b = 0; b < 8; b++) {
-            this.pieces.add(new Pawn(false, 6 , b));
-            this.spaces[6][b] = new Space(6, b, new Pawn(false, 6, b));
+            Pawn blackPawn = new Pawn(false, 6 , b);
+            this.pieces.add(blackPawn);
+            this.spaces[6][b] = new Space(6, b, blackPawn);
         }
         //Set Empty spaces
         for (int i = 2; i < 6; i++) {
@@ -94,25 +106,24 @@ public class Board {
                 .filter((piece) -> piece.isWhite() == player.isWhiteSide())
                 .findFirst()
                 .get();
-//        System.out.println(playerKing.getColor() + " King (" + playerKing.getX()  +"," + playerKing.getY() + ")");
-//        System.out.println(playerKing.getColor() + " " + enemyTeam.findAny().get().getColor());
 
+        Space kingSpace = getBox(playerKing.getX(), playerKing.getY());
+        ArrayList<Piece> possibleEnemies = new ArrayList<>();
         //creating a new list of enemies that can attack the king passed
-        Stream<Piece> possibleEnemies = enemyTeam.map((piece) -> {
+        enemyTeam.forEach((piece) -> {
+            Space enemySpace = getBox(piece.getX(), piece.getY());
             //calling the inherent functions on the pieces to check if its possible for them to get to the king
-            if(piece.canMove(board, this.getBox(piece.getX(), piece.getY()), this.getBox(playerKing.getX(), playerKing.getY()))){
-                return piece;
+            if(piece.canMove(board, enemySpace, kingSpace)){
+                System.out.println(piece.getColor() + " " + piece.getName() + " " + piece.getX() + "," + piece.getY());
+                possibleEnemies.add(piece);
             }
-            return null;
         });
+
         //if possible return true
         if (possibleEnemies.toArray().length > 0){
-            System.out.println("True");
-
+            System.out.println(possibleEnemies.toArray().length);
             return true;
         } else {
-            System.out.println("False");
-
             return false;
         }
     }

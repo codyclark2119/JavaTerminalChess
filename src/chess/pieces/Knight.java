@@ -20,23 +20,19 @@ public class Knight extends Piece {
         if(end.getPiece() != null){
             //Prevents moving into a space already occupied by the same color
             if(this.isWhite() == end.getPiece().isWhite()){
-                System.out.println("Space Occupied");
                 return false;
             }
         }
         //Checking for valid movement
         //If x changes by two and y by 1 Successful
         if(x == 2 && y == 1){
-            System.out.println("Successful move");
             return true;
         }
         //If x changes by one and y by 2 Successful
-        if(x == 1 && y == 2){
-            System.out.println("Successful move");
+        else if(x == 1 && y == 2){
             return true;
         }
         //Failed check
-        System.out.println("Invalid move");
         return false;
     }
 }

@@ -29,12 +29,14 @@ public class Game {
     }
 
     public void listMoves() {
+        //Print a line of each move played
         for(int i = 0; i < movesPlayed.size(); i++){
             System.out.println(movesPlayed.get(i).toString());
         }
     }
 
     public void displayBoard(){
+        //Prints the board using the overwritten to string from the board class
         System.out.println(board.toString());
     }
 
@@ -71,21 +73,14 @@ public class Game {
             System.out.println("Not valid move\n");
             return false;
         }
-        //Check for if there is an enemy piece in the end space
-        //and sets their death
-        Piece endPiece = move.getPieceEnd();
-        if (endPiece != null && chosenPiece.isWhite() != endPiece.isWhite()) {
-            endPiece.setKilled(true);
-        } else if(endPiece != null && chosenPiece.isWhite() == endPiece.isWhite()){
-            //Prevents moving into a space already occupied by the same color
-            System.out.println("Space Occupied\n");
-            return false;
-        }
-        System.out.println(board.checkCheck(board, player));
         // store the move in a list
         movesPlayed.add(move);
-        // move piece from the stat box to end box
+        // move piece from the start box to end box
         move.getEnd().setPiece(move.getPieceMoved());
+        //Updating the pieces inherent x y properties
+        chosenPiece.setX(move.getEnd().getX());
+        chosenPiece.setY(move.getEnd().getY());
+        //Clear space moved from
         move.getStart().setPiece(null);
         // set the current turn to the other player
         if (this.currentTurn == players[0]) {
@@ -93,7 +88,14 @@ public class Game {
         } else {
             this.currentTurn = players[0];
         }
+        System.out.println("Player Turn: " + this.currentTurn.getColor());
+        System.out.println("---------------------------------\n");
+        //Check for any check possibilities on the
+        //current move for king movement requirement
+        board.checkCheck(board, this.currentTurn);
+        //Displays the board after each turn
         displayBoard();
+        //return successful move
         return true;
     }
 }

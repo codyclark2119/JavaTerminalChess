@@ -26,20 +26,33 @@ public class King extends Piece {
         //movement amount is valid
         int x = end.getX() - start.getX();
         int y = end.getY() - start.getY();
-        if(Math.abs(x) <= 1 && Math.abs(y) <= 1){
-            if(!this.diagonalMoveCheck(board, start, end)){
-                return false;
-            }
-            else if(!this.verticalMoveCheck(board, start, end)){
-                return false;
-            }
-            else if(!this.horizontalMoveCheck(board, start, end)){
-                return false;
-            }
-            System.out.println("Successful Move");
-            return true;
+        //Not allowing more than one space movement for x axis
+        if(Math.abs(x) >= 2){
+            return false;
         }
-        System.out.println("Invalid Move");
+        //Not allowing more than one space movement for y axis
+        else if(Math.abs(y) >= 2){
+            return false;
+        }
+        //Checking for legal diagonal movement
+        if(Math.abs(x) == Math.abs(y)){
+            if(this.diagonalMoveCheck(board, start, end)) {
+                return true;
+            }
+        }
+        //Checking for legal vertical movement
+        else if(x != 0 && Math.abs(y) == 0){
+            if(this.verticalMoveCheck(board, start, end)){
+                return true;
+            }
+        }
+        //Checking for legal horizontal movement
+        else if(y != 0 && Math.abs(x) == 0){
+            if(this.horizontalMoveCheck(board, start, end)) {
+                return true;
+            }
+        }
+        //Otherwise invalid movement
         return false;
     }
 }

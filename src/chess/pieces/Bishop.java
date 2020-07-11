@@ -11,10 +11,17 @@ public class Bishop extends Piece {
     }
     @Override
     public boolean canMove(Board board, Space start, Space end){
-        if(!this.diagonalMoveCheck(board, start, end)){
-            return false;
+        //Getting the difference between coordinates passed to check if
+        //movement amount is valid
+        int x = Math.abs(end.getX() - start.getX());
+        int y = Math.abs(end.getY() - start.getY());
+        //Checks the absolute value to check if Piece moves diagonally equally
+        if(x == y){
+            if(this.diagonalMoveCheck(board, start, end)) {
+                return true;
+            }
         }
-        System.out.println("Successful move");
-        return true;
+        //Otherwise invalid movement
+        return false;
     }
 }

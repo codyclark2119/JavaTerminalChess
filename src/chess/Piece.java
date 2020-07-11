@@ -1,7 +1,7 @@
 package chess;
 
 public abstract class Piece {
-    private boolean killed = false;
+    private boolean moved = false;
     private boolean white = false;
     private String name = new String();
     private int x;
@@ -13,12 +13,12 @@ public abstract class Piece {
         this.y = y;
     }
 
-    public boolean isKilled() {
-        return killed;
+    public boolean isMoved() {
+        return moved;
     }
 
-    public void setKilled(boolean killed) {
-        this.killed = killed;
+    public void setMoved(boolean moved) {
+        this.moved = moved;
     }
 
     public int getX() {
@@ -72,46 +72,51 @@ public abstract class Piece {
         int checkX = start.getX();
         int checkY = start.getY();
         //Checks the absolute value to check if Piece moves diagonally
-        if(Math.abs(x) == Math.abs(y)){
-            for(int m = 0; m < Math.abs(x); m++){
+        if(Math.abs(x) == Math.abs(y)) {
+            for (int m = 0; m < Math.abs(x); m++) {
                 //If greater than 0 check the next 1 space to the bottom
-                if(x > 0){
+                if (x > 0) {
                     checkX++;
                 }
                 //Otherwise check to the top
-                else if (x < 0){
+                else if (x < 0) {
                     checkX--;
                 }
                 //If greater than 0 check the next 1 space to the right
-                if(y > 0){
+                if (y > 0) {
                     checkY++;
                 }
                 //Otherwise check to the left
-                else if(y < 0){
+                else if (y < 0) {
                     checkY--;
                 }
                 //After the increment check to see if that space has a piece
-                if(board.getBox(checkX,checkY).getPiece() != null){
-                    Piece foundPiece = board.getBox(checkX,checkY).getPiece();
+                if (board.getBox(checkX, checkY).getPiece() != null) {
+                    Piece foundPiece = board.getBox(checkX, checkY).getPiece();
                     //Check for same color in the way to the end space chosen
-                    if(foundPiece.isWhite() == this.isWhite()){
-                        System.out.println(foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + ","+ checkY + ")");
+                    if (foundPiece.isWhite() == this.isWhite()) {
+                        System.out.println(foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + "," + checkY + ")");
                         return false;
                     }
-                    else if(foundPiece.isWhite() != this.isWhite() && checkX != end.getX()){
-                        System.out.println(foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + ","+ checkY + ")");
+                    //fails the check if a piece in the way to the end point
+                    else if (foundPiece.isWhite() != this.isWhite() && checkX != end.getX()) {
+                        System.out.println(foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + "," + checkY + ")");
                         return false;
                     } else {
-                        System.out.println(this.getColor() + " " + this.getName() + " Attacks " + foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + ","+ checkY + ")");
+                        //Allow attack if at the end point
+                        System.out.println(this.getColor() + " " + this.getName() + " Attacks " + foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + "," + checkY + ")");
                         return true;
                     }
                 }
             }
-            System.out.println("Successful Diagonal move");
+            //Doesn't allow any diagonal movement for pawns unless there are successful attacks
+            if (this.getName() == "Pawn") {
+                return false;
+            }
+            //Otherwise its a successful diagonal move
             return true;
         }
-        //Otherwise Failed check
-        System.out.println("Invalid Diagonal Move");
+        //Failed check if the movement wasn't an equal difference
         return false;
     }
 
@@ -122,12 +127,15 @@ public abstract class Piece {
         int y = end.getY() - start.getY();
         int checkX = start.getX();
         int checkY = start.getY();
-        //If the piece has been moved only along the x axis successful
+        //If the piece has been moved only along the x axis
         if(x != 0 && y == 0){
-            for(int m = 0; m < Math.abs(x); x++){
+            //Making a check at every space for any pieces in the way
+            for(int m = 0; m < Math.abs(x); m++){
+                //Moves the space selector up the x axis one
                 if (x < 0){
                     checkX--;
                 }
+                //Moves the space selector down the x axis one
                 else if (x > 0) {
                     checkX++;
                 }
@@ -139,24 +147,21 @@ public abstract class Piece {
                         System.out.println(foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + ","+ checkY + ")");
                         return false;
                     }
+                    //If it has encountered an enemy before selected end point
                     else if(foundPiece.isWhite() != this.isWhite() && checkX != end.getX()){
                         System.out.println(foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + ","+ checkY + ")");
                         return false;
                     } else {
+                        //Otherwise successfully attacks and moves
                         System.out.println(this.getColor() + " " + this.getName() + " Attacks " + foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + ","+ checkY + ")");
                         return true;
                     }
                 }
             }
-            if(this.getName() == "Pawn"){
-                System.out.println("Pawn cannot move diagonal");
-                return false;
-            }
-            System.out.println("Successful Vertical Move");
+            //If no obstruction on the way to end point successful move
             return true;
         }
         //Otherwise Failed check
-        System.out.println("Invalid Vertical move");
         return false;
     }
 
@@ -169,10 +174,14 @@ public abstract class Piece {
         int checkY = start.getY();
         //If the piece has been moved only along the y axis successful
         if(y != 0 && x == 0){
+            //Making a check at every space for any pieces in the way
             for(int n = 0; n < Math.abs(y); n++){
+                //Moves the space selector right the y axis one
                 if(y < 0){
                     checkY--;
-                } else if (y > 0) {
+                }
+                //Moves the space selector left the y axis one
+                else if (y > 0) {
                     checkY++;
                 }
                 //After the increment check to see if that space has a piece
@@ -183,20 +192,21 @@ public abstract class Piece {
                         System.out.println(foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + ","+ checkY + ")");
                         return false;
                     }
+                    //If it has encountered an enemy before selected end point
                     else if(foundPiece.isWhite() != this.isWhite() && checkX != end.getX()){
                         System.out.println(foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + ","+ checkY + ")");
                         return false;
                     } else {
+                        //Otherwise successfully attacks and moves
                         System.out.println(this.getColor() + " " + this.getName() + " Attacks " + foundPiece.getColor() + " " + foundPiece.getName() + " at (" + checkX + ","+ checkY + ")");
                         return true;
                     }
                 }
             }
-            System.out.println("Successful Horizontal Move");
+            //If no obstruction on the way to end point successful move
             return true;
         }
         //Otherwise Failed check
-        System.out.println("Invalid Horizontal move");
         return false;
     }
 }
