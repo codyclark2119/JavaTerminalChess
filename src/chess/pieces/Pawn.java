@@ -28,29 +28,27 @@ public class Pawn extends Piece {
         if(Math.abs(x) == 2){
             //White
             if(start.getX() == 1 && this.isWhite()){
-                if (this.verticalMoveCheck(board, start, end)) {
-                    return true;
-                }
+                return this.verticalMoveCheck(board, start, end);
             }
             //Black
             else if(start.getX() == 6 && this.isWhite() == false){
-                if (this.verticalMoveCheck(board, start, end)) {
-                    return true;
-                }
+                return this.verticalMoveCheck(board, start, end);
             }
         }
-        if(Math.abs(x) > 2){
-            return false;
+        if(Math.abs(x) < 2){
+            return this.verticalMoveCheck(board, start, end);
         }
         //Prevents white backwards moving
-        if(this.getName() == "White" && x <= 1){
+        if(this.getName() == "White" && x == 1){
+            System.out.println("Pawn fail 2");
             return false;
         }
         //Prevents black backwards moving
-        if(this.getName() == "Black" && x >= -1){
+        if(this.getName() == "Black" && x == -1){
+            System.out.println("Pawn fail 3");
             return false;
         }
         //Successful check
-        return true;
+        return false;
     }
 }

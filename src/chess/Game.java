@@ -4,26 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private Player[] players = new Player[2];
-    private Board board = new Board();
-    private Player currentTurn;
     private List<Move> movesPlayed = new ArrayList();
 
     public void initialize(Player p1, Player p2) {
         try {
-            //Setting players
-            players[0] = p1;
-            players[1] = p2;
-            //Resetting the board
-            board.resetBoard();
-            displayBoard();
             System.out.println("\n           Game Start\n");
-            //Setting initial turn for whoever picked white side
-            if (p1.isWhiteSide()) {
-                this.currentTurn = p1;
-            } else {
-                this.currentTurn = p2;
-            }
             //Clearing any previous game moves.
             if (movesPlayed.size() > 0) {
                 movesPlayed.clear();
@@ -40,48 +25,31 @@ public class Game {
         }
     }
 
-    public void changeTurn(Player player){
-        // set the current turn to the other player
-        if (player == players[0]) {
-            this.currentTurn = players[1];
-        } else {
-            this.currentTurn = players[0];
-        }
-    }
 
-    public void displayBoard(){
-        //Prints the board using the overwritten to string from the board class
-        System.out.println(board.toString());
-    }
 
-    public boolean playerMove(Player player, int startX, int startY, int endX, int endY) {
-        //Getting the start space from the board
-        Space startBox = board.getBox(startX, startY);
-        //Getting the space to move to from the board
-        Space endBox = board.getBox(endX, endY);
-        //Creating a move to send to the make move function
-        Move move = new Move(player, startBox, endBox);
-        return this.makeMove(move, player);
-    }
-
-    private boolean makeMove(Move move, Player player) {
+    public boolean makeMove(Board board, Move move, Player player) {
         try{
             //Getting the piece being moved
             Piece chosenPiece = move.getPieceMoved();
             //Checking if piece exists
             if (chosenPiece == null) {
+                System.out.println("Chosen null");
                 return false;
             }
             //Checking if it is that players turn
-            if (player != currentTurn) {
+            if (!player.isCurrentTurn()) {
+                System.out.println("Out of turn");
                 return false;
             }
             //Making sure the piece belongs to the player
             if (chosenPiece.isWhite() != player.isWhiteSide()) {
+                System.out.println("Not your piece");
                 return false;
             }
             //Checks to see if the move is valid according the the pieces pattern
             if (!chosenPiece.canMove(board, move.getStart(), move.getEnd())) {
+                System.out.println("Invalid move");
+
                 return false;
             }
             // move piece from the start box to end box
@@ -92,26 +60,16 @@ public class Game {
             //Clearing start space
             move.getStart().setPiece(null);
             //check if originally in check
-            if(this.currentTurn.isInCheck()){
+            if(player.isInCheck()){
                 //If out of check
-                if(!board.checkCheck(board, this.currentTurn)){
+                if(!board.checkCheck(board, player)){
                     //Clears original check
-                    this.currentTurn.setInCheck(false);
+                    player.setInCheck(false);
                     // store the move in a list if out of check
                     movesPlayed.add(move);
                     //Displays the board after each turn
-                    displayBoard();
-                    System.out.println("       Player Turn: " + this.currentTurn.getColor() + "\n");
-                    // set the current turn to the other player
-                    changeTurn(this.currentTurn);
-                    //Set check message
-                    if (board.checkCheckMate(board, this.currentTurn)){
-                        System.out.println("True checkmate");
-                    }
-                    if(board.checkCheck(board, this.currentTurn)){
-                        System.out.println("\n"+this.currentTurn.getColor() + " in Check\n");
-                        this.currentTurn.setInCheck(true);
-                    }
+                    board.displayBoard();
+                    System.out.println("       Player Turn: " + player.getColor() + "\n");
                     return true;
                 } else {
                     System.out.println("\nFailed to move out of check\n");
@@ -130,18 +88,8 @@ public class Game {
                 // stores the move in a list
                 movesPlayed.add(move);
                 //Displays the board after each turn
-                displayBoard();
-                System.out.println("       Player Turn: " + this.currentTurn.getColor()+ "\n");
-                // set the current turn to the other player
-                changeTurn(this.currentTurn);
-                if (board.checkCheckMate(board, this.currentTurn)){
-                    System.out.println("True checkmate");
-                }
-                //Set check message
-                if(board.checkCheck(board, this.currentTurn)){
-                    System.out.println("\n         "+this.currentTurn.getColor() + " in Check\n");
-                    this.currentTurn.setInCheck(true);
-                }
+                board.displayBoard();
+                System.out.println("       Player Turn: " + player.getColor()+ "\n");
                 return true;
             }
         } catch (Exception e){

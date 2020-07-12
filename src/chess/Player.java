@@ -3,8 +3,11 @@ package chess;
 public class Player {
     private boolean whiteSide;
     private boolean inCheck = false;
-    public Player(boolean whiteSide){
+    private boolean currentTurn;
+
+    public Player(boolean whiteSide, boolean currentTurn){
         this.whiteSide = whiteSide;
+        this.currentTurn = currentTurn;
     }
 
     public boolean isInCheck() {
@@ -13,6 +16,14 @@ public class Player {
 
     public void setInCheck(boolean inCheck) {
         this.inCheck = inCheck;
+    }
+
+    public boolean isCurrentTurn() {
+        return currentTurn;
+    }
+
+    public void setCurrentTurn(boolean currentTurn) {
+        this.currentTurn = currentTurn;
     }
 
     public boolean isWhiteSide()

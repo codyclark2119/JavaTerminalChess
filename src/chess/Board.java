@@ -167,7 +167,7 @@ public class Board {
                     }
                 });
             });
-        System.out.println(possibleEnemies.toArray().length + " , "+ possibleMoves.size());
+        System.out.println("Enemies that can attack: " + possibleEnemies.toArray().length + "\nPossible King Moves: "+ possibleMoves.size());
             //If there were enemies that can reach the king validate the check status
             if (possibleEnemies.toArray().length == possibleMoves.size() && possibleMoves.size() > 0) {
                 System.out.println(possibleEnemies.toArray().length);
@@ -191,6 +191,11 @@ public class Board {
             return null;
         }
         return this.spaces[x][y].getPiece();
+    }
+
+    public void displayBoard(){
+        //Prints the board using the overwritten to string from the board class
+        System.out.println(this.toString());
     }
 
     @Override
