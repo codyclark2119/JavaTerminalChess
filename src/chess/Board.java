@@ -150,17 +150,16 @@ public class Board {
                     .get();
             //Setting a reference for the space holding the king
             Space kingSpace = getBox(playerKing.getX(), playerKing.getY());
+            //Getting all the possible available moves for the king
             List<Move> possibleMoves = playerKing.possibleMoves(board, kingSpace, player);
-            if(possibleMoves.size() > 0){
-                System.out.println("Working " + possibleMoves.size() + " Spaces possible");
-            }
             //Creating a list of possible enemies
             ArrayList<Piece> possibleEnemies = new ArrayList<>();
-            //creating a new list of enemies that can attack the king passed
+            //Iterating list of enemies of the king
             enemyTeam.forEach((piece) -> {
-                //Getting the current space of an enemy
+                //Getting the current space of enemy
                 Space enemySpace = getBox(piece.getX(), piece.getY());
-                //Checking if the enemy can move to the kings from their current space
+                //Checking if the enemy can move to the kings
+                //possible spaces from their current space
                 possibleMoves.stream().forEach((move) -> {
                     if (piece.canMove(board, enemySpace, move.getEnd())) {
                         //If possible add to list
@@ -168,9 +167,9 @@ public class Board {
                     }
                 });
             });
-
+        System.out.println(possibleEnemies.toArray().length + " , "+ possibleMoves.size());
             //If there were enemies that can reach the king validate the check status
-            if (possibleEnemies.toArray().length > 0) {
+            if (possibleEnemies.toArray().length == possibleMoves.size() && possibleMoves.size() > 0) {
                 System.out.println(possibleEnemies.toArray().length);
                 return true;
             } else {

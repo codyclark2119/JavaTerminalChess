@@ -13,6 +13,10 @@ public class Main {
         //White Queen move check success
         newGame.playerMove(p1, 0, 4, 4, 0);
 
+        newGame.playerMove(p2, 6, 1, 5, 1);
+
+        newGame.playerMove(p1, 4, 0, 5, 1);
+
 
         newGame.listMoves();
     }

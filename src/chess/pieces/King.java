@@ -24,7 +24,6 @@ public class King extends Piece {
     public boolean checkValidMovement(int x, int y) {
         //Gets a space specifically if its in bounds
         if (x < 0 || x > 7 || y < 0 || y > 7) {
-            System.out.println("invalid space");
             return false;
         }
         return true;
@@ -35,49 +34,40 @@ public class King extends Piece {
         //movement is valid
         int x = start.getX();
         int y = start.getY();
-
+        //List holding all possible movements
         List<Move> moves = new ArrayList<>();
         // N
         if(checkValidMovement(x-1,y) && canMove(board, start, board.getBox(x-1, y))) {
-            System.out.println("N");
             moves.add(new Move(player, start, board.getBox(x-1, y)));
         }
         // NE
         if(checkValidMovement(x-1, y+1) && canMove(board, start, board.getBox(x-1, y+1))) {
-            System.out.println("NE");
             moves.add(new Move(player, start, board.getBox(x-1, y + 1)));
         }
         // E
         if(checkValidMovement(x,y+1) && canMove(board, start, board.getBox(x,y+1))) {
-            System.out.println("E");
             moves.add(new Move(player, start, board.getBox(x , y + 1)));
         }
         // SE
         if(checkValidMovement(x+1,y+1) && canMove(board, start, board.getBox(x+1,y+1))) {
-            System.out.println("SE");
             moves.add(new Move(player, start, board.getBox(x + 1, y + 1)));
         }
         // S
         if(checkValidMovement(x+1,y) && canMove(board, start, board.getBox(x+1,y))) {
-            System.out.println("S");
             moves.add(new Move(player, start, board.getBox(x+1, y)));
         }
         // SW
         if(checkValidMovement(x+1,y-1) && canMove(board, start, board.getBox(x+1,y-1))) {
-            System.out.println("SW");
             moves.add(new Move(player, start, board.getBox(x + 1, y - 1)));
         }
         // W
         if(checkValidMovement(x,y-1) && canMove(board, start, board.getBox(x,y-1))) {
-            System.out.println("W");
             moves.add(new Move(player, start, board.getBox(x, y-1)));
         }
         // NW
-        if(checkValidMovement(x-1,y-1) && canMove(board, start, board.getBox(x-1,y=1))) {
-            System.out.println("NW");
-            moves.add(new Move(player, start, board.getBox(x - 1, y = 1)));
+        if(checkValidMovement(x-1,y-1) && canMove(board, start, board.getBox(x-1,y-1))) {
+            moves.add(new Move(player, start, board.getBox(x - 1, y - 1)));
         }
-        System.out.println(moves.size());
         return moves;
     }
 

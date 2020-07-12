@@ -104,10 +104,10 @@ public class Game {
                     System.out.println("       Player Turn: " + this.currentTurn.getColor() + "\n");
                     // set the current turn to the other player
                     changeTurn(this.currentTurn);
+                    //Set check message
                     if (board.checkCheckMate(board, this.currentTurn)){
                         System.out.println("True checkmate");
                     }
-                    //Set check message
                     if(board.checkCheck(board, this.currentTurn)){
                         System.out.println("\n"+this.currentTurn.getColor() + " in Check\n");
                         this.currentTurn.setInCheck(true);
