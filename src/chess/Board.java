@@ -3,6 +3,7 @@ package chess;
 import chess.pieces.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class Board {
@@ -133,6 +134,48 @@ public class Board {
             System.out.println("Fail to run check");
         }
         return false;
+    }
+
+    public boolean checkCheckMate(Board board, Player player){
+
+            //Filtering all pieces to be a list of enemies of passed player
+            Stream<Piece> enemyTeam = this.pieces.stream().filter((piece) -> {
+                return piece.isWhite() != player.isWhiteSide();
+            });
+            //Gets the player passed king
+            King playerKing = (King) this.pieces.stream()
+                    .filter((piece) -> piece.getName() == "King")
+                    .filter((piece) -> piece.isWhite() == player.isWhiteSide())
+                    .findFirst()
+                    .get();
+            //Setting a reference for the space holding the king
+            Space kingSpace = getBox(playerKing.getX(), playerKing.getY());
+            List<Move> possibleMoves = playerKing.possibleMoves(board, kingSpace, player);
+            if(possibleMoves.size() > 0){
+                System.out.println("Working " + possibleMoves.size() + " Spaces possible");
+            }
+            //Creating a list of possible enemies
+            ArrayList<Piece> possibleEnemies = new ArrayList<>();
+            //creating a new list of enemies that can attack the king passed
+            enemyTeam.forEach((piece) -> {
+                //Getting the current space of an enemy
+                Space enemySpace = getBox(piece.getX(), piece.getY());
+                //Checking if the enemy can move to the kings from their current space
+                possibleMoves.stream().forEach((move) -> {
+                    if (piece.canMove(board, enemySpace, move.getEnd())) {
+                        //If possible add to list
+                        possibleEnemies.add(piece);
+                    }
+                });
+            });
+
+            //If there were enemies that can reach the king validate the check status
+            if (possibleEnemies.toArray().length > 0) {
+                System.out.println(possibleEnemies.toArray().length);
+                return true;
+            } else {
+                return false;
+            }
     }
 
     public Space getBox(int x, int y) {
