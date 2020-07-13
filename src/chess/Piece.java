@@ -88,7 +88,73 @@ public abstract class Piece {
         return true;
     }
 
-    public List possibleMoves(Board board, Space start, Player player){
+    public List possibleMoveTo(Board board, Move move, Player player){
+
+        //List holding all possible movements
+        List<Move> moves = new ArrayList<>();
+        int x = move.getEnd().getX() - move.getStart().getX();
+        int y = move.getEnd().getY() - move.getStart().getY();
+        int checkX = move.getStart().getX();
+        int checkY = move.getStart().getY();
+        if(Math.abs(x) == Math.abs(y)){
+            for (int m = 0; m < Math.abs(x); m++) {
+                if (x > 0) {
+                    checkX++;
+                }
+                //Otherwise check to the top
+                else if (x < 0) {
+                    checkX--;
+                }
+                //If greater than 0 check the next 1 space to the right
+                if (y > 0) {
+                    checkY++;
+                }
+                //Otherwise check to the left
+                else if (y < 0) {
+                    checkY--;
+                }
+                if (this.diagonalMoveCheck(board, move.getStart(), board.getBox(checkX, checkY))) {
+                    moves.add(new Move(player, move.getStart(), board.getBox(checkX, checkY)));
+                }
+            }
+        }
+        //If the piece has been moved only along the x axis successful
+        else if(Math.abs(x) > 0 && Math.abs(y) == 0){
+            for (int m = 0; m < Math.abs(x); m++) {
+                //Moves the space selector up the x axis one
+                if (x < 0) {
+                    checkX--;
+                }
+                //Moves the space selector down the x axis one
+                else if (x > 0) {
+                    checkX++;
+                }
+                if(this.verticalMoveCheck(board, move.getStart(), board.getBox(checkX, checkY))){
+                    moves.add(new Move(player, move.getStart(), board.getBox(checkX, checkY)));
+                }
+            }
+        }
+        //If the queen has been moved only along the y axis successful
+        else if(Math.abs(y) > 0 && Math.abs(x) == 0){
+            //Making a check at every space for any pieces in the way
+            for(int n = 0; n < Math.abs(y); n++) {
+                //Moves the space selector right the y axis one
+                if (y < 0) {
+                    checkY--;
+                }
+                //Moves the space selector left the y axis one
+                else if (y > 0) {
+                    checkY++;
+                }
+                if (this.horizontalMoveCheck(board, move.getStart(), board.getBox(checkX, checkY))) {
+                    moves.add(new Move(player, move.getStart(), board.getBox(checkX, checkY)));
+                }
+            }
+        }
+        return moves;
+    }
+
+    public List possibleKingMoves(Board board, Space start, Player player){
 
         //List holding all possible movements
         List<Move> moves = new ArrayList<>();
@@ -208,7 +274,7 @@ public abstract class Piece {
                     }
                 }
                 //Doesn't allow any diagonal movement for pawns unless there are successful attacks
-                if (this.getName() == "Pawn") {
+                if (this.getName().matches("Pawn") ) {
                     return false;
                 }
                 //Otherwise its a successful diagonal move

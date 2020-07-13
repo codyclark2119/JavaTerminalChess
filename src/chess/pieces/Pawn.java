@@ -20,9 +20,13 @@ public class Pawn extends Piece {
         //Prevents a piece from moving across the y axis
         //and there is no enemy piece
         if (Math.abs(y) > 0) {
+            if((this.isWhite() && x == -1) || (!this.isWhite() && x == 1)){
+                return false;
+            }
             if (this.diagonalMoveCheck(board, start, end)) {
                 return true;
             }
+            return false;
         }
         //Checking for valid first pawn two space movement
         if(Math.abs(x) == 2){

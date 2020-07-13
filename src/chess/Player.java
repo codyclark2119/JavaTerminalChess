@@ -4,6 +4,7 @@ public class Player {
     private boolean whiteSide;
     private boolean inCheck = false;
     private boolean currentTurn;
+    private boolean checkMate = false;
 
     public Player(boolean whiteSide, boolean currentTurn){
         this.whiteSide = whiteSide;
@@ -16,6 +17,14 @@ public class Player {
 
     public void setInCheck(boolean inCheck) {
         this.inCheck = inCheck;
+    }
+
+    public boolean isCheckMate() {
+        return checkMate;
+    }
+
+    public void setCheckMate(boolean checkMate) {
+        this.checkMate = checkMate;
     }
 
     public boolean isCurrentTurn() {

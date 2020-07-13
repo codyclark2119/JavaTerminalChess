@@ -37,11 +37,11 @@ public class Board {
                     Bishop whiteBishop = new Bishop(true, 0, wm);
                     this.pieces.add(whiteBishop);
                     this.spaces[0][wm] = new Space(0, wm, whiteBishop);
-                } else if (wm == 4) {
+                } else if (wm == 3) {
                     Queen whiteQueen = new Queen(true, 0, wm);
                     this.pieces.add(whiteQueen);
                     this.spaces[0][wm] = new Space(0, wm, whiteQueen);
-                } else if (wm == 3) {
+                } else if (wm == 4) {
                     King whiteKing = new King(true, 0, wm);
                     this.pieces.add(whiteKing);
                     this.spaces[0][wm] = new Space(0, wm, whiteKing);
@@ -63,11 +63,11 @@ public class Board {
                     Bishop blackBishop = new Bishop(false, 7, bm);
                     this.pieces.add(blackBishop);
                     this.spaces[7][bm] = new Space(7, bm, blackBishop);
-                } else if (bm == 4) {
+                } else if (bm == 3) {
                     Queen blackQueen = new Queen(false, 7, bm);
                     this.pieces.add(blackQueen);
                     this.spaces[7][bm] = new Space(7, bm, blackQueen);
-                } else if (bm == 3) {
+                } else if (bm == 4) {
                     King blackKing = new King(false, 7, bm);
                     this.pieces.add(blackKing);
                     this.spaces[7][bm] = new Space(7, bm, blackKing);
@@ -95,7 +95,7 @@ public class Board {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Bad Board build");
+            displayMessage("Bad Board build");
         }
     }
 
@@ -104,7 +104,9 @@ public class Board {
             //Filtering all pieces to be a list of enemies of passed player
             Stream<Piece> enemyTeam = this.pieces.stream().filter((piece) -> {
                 return piece.isWhite() != player.isWhiteSide();
-            });
+            }).filter((p)-> {
+                        return p.isKilled() == false;
+                    });
             //Gets the player passed king
             Piece playerKing = this.pieces.stream()
                     .filter((piece) -> piece.getName() == "King")
@@ -127,12 +129,14 @@ public class Board {
             });
             //If there were enemies that can reach the king validate the check status
             if (possibleEnemies.toArray().length > 0) {
+                player.setInCheck(true);
                 return true;
             } else {
+                player.setInCheck(false);
                 return false;
             }
         } catch (Exception e) {
-            System.out.println("Fail to run check");
+            displayMessage("Fail to run check");
         }
         return false;
     }
@@ -154,7 +158,7 @@ public class Board {
             //Setting a reference for the space holding the king
             Space kingSpace = getBox(playerKing.getX(), playerKing.getY());
             //Getting all the possible available moves for the king
-            List<Move> possibleMoves = playerKing.possibleMoves(board, kingSpace, player);
+            List<Move> possibleMoves = playerKing.possibleKingMoves(board, kingSpace, player);
             //Creating a list of possible enemies
             ArrayList<Move> possibleEnemyMoves = new ArrayList<>();
             //Iterating list of enemies of the king
@@ -170,10 +174,10 @@ public class Board {
                     }
                 });
             });
-        System.out.println("Enemies that can attack: " + possibleEnemyMoves.toArray().length + "\nPossible King Moves: "+ possibleMoves.size());
+            displayMessage("       Enemies that can attack King: " + possibleEnemyMoves.toArray().length + "\n                                   Possible King Moves: "+ possibleMoves.size());
             //If there were enemies that can reach the king validate the check status
             if (!checkBlock(board, possibleEnemyMoves, player, enemy) && possibleEnemyMoves.size() >= possibleMoves.size()) {
-                System.out.println(possibleEnemyMoves.toArray().length);
+                displayMessage("           CheckMate!");
                 return true;
             } else {
                 return false;
@@ -185,57 +189,43 @@ public class Board {
             return true;
         }
         //Filtering all pieces to be a list of enemies of passed player
-        Stream<Piece> playerTeam = this.pieces.stream().filter((piece) -> {
-            return piece.isWhite() == player.isWhiteSide();
-        }).filter((p)-> {
-            return p.isKilled() == false;
-        });
         //Gets the List of possible enemy open spots
         List<List<Move>> enemyMoves = new ArrayList<>();
         possibleEnemyMoves.stream().forEach((move) -> {
-            enemyMoves.add(move.getPieceMoved().possibleMoves(board, move.getStart(), enemy));
+            enemyMoves.add(move.getPieceMoved().possibleMoveTo(board, move, enemy));
         });
         //Creating a list of possible player moves
         ArrayList<Move> possiblePlayerMoves = new ArrayList<>();
         //Iterating list of players pieces
-        playerTeam.forEach((piece) -> {
+
+        this.pieces.stream().filter((piece) -> {
+            return piece.isWhite() == player.isWhiteSide();
+        }).filter((pi) -> {
+            return !pi.getName().matches("King");
+        }).filter((p)-> {
+            return p.isKilled() == false;
+        }).forEach((piece) -> {
             //Getting the current space of that piece
             Space pieceSpace = getBox(piece.getX(), piece.getY());
             //Iterating through all possible enemies move lists
             enemyMoves.stream().forEach((list) -> {
                 //Iterating through the list of enemy piece moves
                 list.stream().forEach((move)->{
-                    Piece originalPiece = move.getEnd().getPiece();
                     //Check if a player piece can move into that space
                         if (piece.canMove(board, pieceSpace, move.getEnd())) {
                             // move player piece from the start box to end box
-                            move.getEnd().setPiece(piece);
-                            //Updating the pieces inherent x y properties
-                            piece.setX(move.getEnd().getX());
-                            piece.setY(move.getEnd().getY());
-                            //Clearing start space
-                            pieceSpace.setPiece(null);
-                            //If possible add to list
-                            if(checkCheck(board, player)){
-                                possiblePlayerMoves.add(new Move(player, pieceSpace, move.getEnd()));
-                            }
-                            //Reset values back to start
-                            pieceSpace.setPiece(piece);
-                            //Updating the pieces inherent x y properties
-                            piece.setX(pieceSpace.getX());
-                            piece.setY(pieceSpace.getY());
-                            //Returning end space
-                            if(originalPiece != null){
-                                move.getEnd().setPiece(originalPiece);
-                            }
-                            move.getEnd().setPiece(null);
+                            possiblePlayerMoves.add(new Move(player, pieceSpace, move.getEnd()));
+                        }
+                        //Check if a player piece can attack that space
+                        else if (piece.canMove(board, pieceSpace, move.getStart())) {
+                            // move player piece from the start box to end box
+                            possiblePlayerMoves.add(new Move(player, pieceSpace, move.getEnd()));
                         }
                     });
                 });
             });
         //If there were enemies that can reach the king validate the check status
         if (possiblePlayerMoves.size()  > 0) {
-            System.out.println(possibleEnemyMoves.size());
             return true;
         } else {
             return false;
@@ -259,9 +249,9 @@ public class Board {
     }
 
     public void displayMessage(String msg){
-        System.out.println("                           =------------------------------------=\n");
-        System.out.println("                       "+ msg + "\n");
-        System.out.println("                           =-------------------------------------=");
+        System.out.println("                           =------------------------------------=");
+        System.out.println("                       "+ msg + "");
+        System.out.println("                           =------------------------------------=");
     }
 
 
@@ -293,14 +283,14 @@ public class Board {
 
         } else{
             boardDisplay += "              =------==------==------==------==------==------==------==------=\n              ";
-            for (int dy = 0; dy < 8; dy++) {
+            for (int dy = 7; dy >= 0; dy--) {
                 boardDisplay += "|  X-" + dy + " |";
             }
             boardDisplay += "\n              =------==------==------==------==------==------==------==------=\n";
             for (int sx = 0; sx < 8; sx++) {
                 boardDisplay += "     =-------=----------------------------------------------------------------=-------=\n     ";
                 boardDisplay += "|  Y-"+sx +"  |";
-                for (int sy = 0; sy < 8; sy++) {
+                for (int sy = 7; sy >= 0; sy--) {
                     boardDisplay += this.spaces[sx][sy].toString();
                 }
                 boardDisplay += "|  Y-"+ sx +"  |";
@@ -308,7 +298,7 @@ public class Board {
             }
             boardDisplay += "     =-------=----------------------------------------------------------------=-------=\n";
             boardDisplay += "              =------==------==------==------==------==------==------==------=\n              ";
-            for (int dy = 0; dy < 8; dy++){
+            for (int dy = 7; dy >= 0; dy--){
                 boardDisplay += "|  X-"+dy + " |";
             }
             boardDisplay += "\n              =------==------==------==------==------==------==------==------=";

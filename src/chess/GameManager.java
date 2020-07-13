@@ -15,7 +15,9 @@ public class GameManager {
 
     public static void main(String args[]){
         GameManager newGame = new GameManager();
-        newGame.startGame();
+        while(!isOver){
+            newGame.startGame();
+        }
     }
 
     public GameManager() {
@@ -96,9 +98,14 @@ public class GameManager {
         return true;
     }
 
-    public boolean confirm(){
-        board.displayMessage("      Submit (y/n) to finalize your move");
+    public int askForInput(String question){
+        System.out.println(question);
+        return scanner.nextInt();
+    }
+
+    public boolean confirm(String msg){
         scanner.nextLine();
+        board.displayMessage(msg);
         String confirm = scanner.nextLine().toLowerCase();
         System.out.println(confirm);
         if (confirm.matches("y")) {
@@ -109,54 +116,95 @@ public class GameManager {
         }
     }
 
+    public static Game getNewGame() {
+        return newGame;
+    }
 
-    public void startGame(){
-        while(!isOver()){
+    public void playerMoveInput(){
+        //Reset move over to false
+        setMoveIsOver(false);
+        //while the move isn't over
+        while(!isMoveIsOver()){
+            if(board.checkCheckMate(board, getCurrentPlayer(), getEnemyPlayer())){
+                setMoveIsOver(true);
+                setOver(true);
+            }
+            //Show board
             this.getBoard().displayBoard(getCurrentPlayer());
             board.displayMessage("             Player Turn: " + this.getCurrentPlayer().getColor());
-            System.out.println("Input piece to move X Axis number(Left to Right)");
-            int startX = scanner.nextInt();
-            System.out.println("Input piece to move Y Axis number(Top to Bottom)");
-            int startY = scanner.nextInt();
-            if(getBoard().getPiece(startY, startX) == null || getBoard().getPiece(startY, startX).isWhite() != getCurrentPlayer().isWhiteSide()){
+            //Asking for user input for starting piece to be chosen
+            int startX = askForInput("Starting space's X Axis: ");
+            int startY = askForInput("Starting space's Y Axis: ");
+            Piece currentPiece = getBoard().getPiece(startY, startX);
+            //Check if piece isn't valid
+            if(currentPiece == null || currentPiece.isWhite() != getCurrentPlayer().isWhiteSide()){
                 board.displayMessage("     No valid piece selected");
-            } else{
+            } else {
+                //Show board again
                 this.getBoard().displayBoard(getCurrentPlayer());
                 board.displayMessage("        " +getBoard().getPiece(startY, startX).getColor() + " " + getBoard().getPiece(startY, startX).getName() + " Start Space: (" + startX + "," + startY + ") ");
-                System.out.println("Input end space X Axis number(Left to Right)");
-                int endX = scanner.nextInt();
-                System.out.println("Input end space Y Axis number(Top to Bottom)");
-                int endY = scanner.nextInt();
+                //Asking for user input for end space to be chosen
+                int endX = askForInput("End space's X Axis: ");
+                int endY = askForInput("End space's Y Axis: ");
+                //Check if points chosen are both valid spaces
                 if(validSpace(startY, startX, endY, endX)){
+                    //Grabs original piece of end space in case of confirm refusal
                     Piece originalPiece = board.getPiece(endY, endX);
-
-                    if(playerMove(startY, startX, endY, endX)){
-                        this.getBoard().displayBoard(getCurrentPlayer());
-                        board.displayMessage("     Start Space: (" + startX + "," + startY + ") " + "End Space: (" + endX + "," + endY + ")");
-                        if(confirm()){
-                            board.displayMessage("               Successful Move!");
-                            this.getBoard().displayBoard(getCurrentPlayer());
-                            changeTurn(getCurrentPlayer());
-
-                            if (getBoard().checkCheckMate(getBoard(), getCurrentPlayer(), getEnemyPlayer())){
-                                board.displayMessage("True checkmate");
-                            }
-                            //Set check message
-                            if(getBoard().checkCheck(getBoard(), getCurrentPlayer())){
-                                board.displayMessage(getCurrentPlayer().getColor() + " in Check");
-                                getCurrentPlayer().setInCheck(true);
-                            }
-                        } else {
-                            board.getBox(startY, startX).setPiece(board.getBox(endY, endX).getPiece() );
-                            board.getBox(endY, endX).setPiece(originalPiece);
-                            board.displayMessage("Move Cancelled");
+                    //If the move is allowed by the pieces rules
+                    if(!playerMove(startY, startX, endY, endX)){
+                        //Move fails, invalidate move
+                        board.displayMessage("            Move not allowed");
+                        board.getBox(startY, startX).setPiece(currentPiece);
+                        board.getBox(endY, endX).setPiece(originalPiece);
+                        currentPiece.setX(startX);
+                        currentPiece.setY(startY);
+                        if(originalPiece != null){
+                            originalPiece.setX(endX);
+                            originalPiece.setY(endY);
                         }
                     } else {
-                        board.displayMessage("Unsuccessful Move");
+                        //Show preview of move
+                        this.getBoard().displayBoard(getCurrentPlayer());
+                        board.displayMessage("     Start Space: (" + startX + "," + startY + ") " + "End Space: (" + endX + "," + endY + ")");
+                        //If user confirms yes to the move
+                        if(confirm("      Submit (y/n) to finalize your move")){
+                            //Move success
+                            board.displayMessage("               Successful Move!");
+                            this.getBoard().displayBoard(getCurrentPlayer());
+                            //Change turn
+                            changeTurn(getCurrentPlayer());
+                            //Ends current move while lops
+                        } else {
+                            board.getBox(startY, startX).setPiece(currentPiece);
+                            board.getBox(endY, endX).setPiece(originalPiece);
+                            currentPiece.setX(startY);
+                            currentPiece.setY(startX);
+                            if(originalPiece != null){
+                                originalPiece.setX(endY);
+                                originalPiece.setY(endX);
+                            }
+                            board.displayMessage("             Move Cancelled for " + board.getBox(startY, startX).getPiece().getName());
+                        }
+                        setMoveIsOver(true);
+
                     }
                 } else {
                     board.displayMessage("Unsuccessful Move");
                 }
+            }
+        }
+    }
+
+
+    public void startGame(){
+        playerMoveInput();
+        if(isOver()){
+            if(confirm("      Would you like to play again?(y/n)")){
+                setOver(false);
+                startGame();
+            } else{
+                board.displayMessage("      Thank you for playing");
+                System.exit(0);
             }
         }
     }

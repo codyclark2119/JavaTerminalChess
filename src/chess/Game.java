@@ -45,32 +45,15 @@ public class Game {
             chosenPiece.setY(move.getEnd().getY());
             //Clearing start space
             move.getStart().setPiece(null);
-            //check if originally in check
-            if(player.isInCheck()){
-                //If out of check
-                if(!board.checkCheck(board, player)){
-                    //Clears original check
-                    player.setInCheck(false);
-                    // store the move in a list if out of check
-                    movesPlayed.add(move);
-                    return true;
-                } else {
-                    System.out.println("\nFailed to move out of check\n");
-                    //Reset values back to start
-                    move.getStart().setPiece(move.getPieceMoved());
-                    //Updating the pieces inherent x y properties
-                    chosenPiece.setX(move.getStart().getX());
-                    chosenPiece.setY(move.getStart().getY());
-                    //Clear end space
-                    move.getEnd().setPiece(null);
-                    //and fail the move
-                    return false;
-                }
-            } else {
-                //If was never in check goes ahead and
-                // stores the move in a list
+            //If out of check
+            if(!board.checkCheck(board, player)){
+                // store the move in a list if out of check
                 movesPlayed.add(move);
                 return true;
+            } else {
+                System.out.println("\nFailed to move out of check\n");
+                //and fail the move
+                return false;
             }
         } catch (Exception e){
             System.out.println("Error Creating movement");
