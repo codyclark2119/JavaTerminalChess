@@ -177,7 +177,7 @@ public class Board {
             displayMessage("       Enemies that can attack King: " + possibleEnemyMoves.toArray().length + "\n                                   Possible King Moves: "+ possibleMoves.size());
             //If there were enemies that can reach the king validate the check status
             if (!checkBlock(board, possibleEnemyMoves, player, enemy) && possibleEnemyMoves.size() >= possibleMoves.size()) {
-                displayMessage("           CheckMate!");
+                displayMessage("                   CheckMate!");
                 return true;
             } else {
                 return false;
