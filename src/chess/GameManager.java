@@ -3,27 +3,25 @@ package chess;
 import java.util.Scanner;
 
 public class GameManager {
-    private static boolean isOver;
-    private static boolean moveIsOver;
+    private static boolean isOver = false;
+    private static boolean moveIsOver = false;
     private static Game newGame;
     private static Board board;
     private static Player p1 = new Player(true, true);
     private static Player p2 = new Player(false, false);
     private static Player[] players = new Player[]{p1, p2};
     private static Scanner scanner = new Scanner(System.in);
-    private static Player currentPlayer;
+    private static Player currentPlayer = p1;
+
+    public static void main(String args[]){
+        GameManager newGame = new GameManager();
+        newGame.startGame();
+    }
 
     public GameManager() {
         this.setGame(new Game());
         this.setBoard(new Board());
-        getBoard().resetBoard();
-        setOver(false);
-        setMoveIsOver(false);
-        if(p1.isWhiteSide()){
-            setCurrentPlayer(p1);
-        } else {
-            setCurrentPlayer(p2);
-        }
+        board.displayMessage("               Welcome to Chess");
     }
 
     public boolean isOver() {
@@ -44,6 +42,14 @@ public class GameManager {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public Player getEnemyPlayer() {
+        if (currentPlayer == players[0]) {
+            return players[1];
+        } else {
+            return players[0];
+        }
     }
 
     public void setCurrentPlayer(Player currentPlayer) {
@@ -79,38 +85,78 @@ public class GameManager {
         GameManager.newGame = newGame;
     }
 
+    public boolean validSpace(int sy, int sx, int ey, int ex){
+        int[] vals = new int[]{sy, sx, ey, ex};
+        for(int i = 0; i < vals.length; i++){
+            if ((vals[i] < 0 || vals[i] > 7) || ((sx == ex) &&  (sy == ey))) {
+                System.out.println("Invalid space Selection");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean confirm(){
+        board.displayMessage("      Submit (y/n) to finalize your move");
+        scanner.nextLine();
+        String confirm = scanner.nextLine().toLowerCase();
+        System.out.println(confirm);
+        if (confirm.matches("y")) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
     public void startGame(){
         while(!isOver()){
-            this.getBoard().displayBoard();
-            System.out.println("Input Start Piece X Axis (Left to Right)");
+            this.getBoard().displayBoard(getCurrentPlayer());
+            board.displayMessage("             Player Turn: " + this.getCurrentPlayer().getColor());
+            System.out.println("Input piece to move X Axis number(Left to Right)");
             int startX = scanner.nextInt();
-            System.out.println("Input Start Piece Y Axis (Top to Bottom)");
+            System.out.println("Input piece to move Y Axis number(Top to Bottom)");
             int startY = scanner.nextInt();
             if(getBoard().getPiece(startY, startX) == null || getBoard().getPiece(startY, startX).isWhite() != getCurrentPlayer().isWhiteSide()){
-                System.out.println("No valid piece selected");
+                board.displayMessage("     No valid piece selected");
             } else{
-                System.out.println(getBoard().getPiece(startY, startX).getColor() + " " + getBoard().getPiece(startY, startX).getName());
-            }
-            System.out.println("Input End Space X Axis (Left to Right)");
-            int endX = scanner.nextInt();
-            System.out.println("Input End Space Y Axis (Top to Bottom)");
-            int endY = scanner.nextInt();
-            System.out.println("Start: (" + startX + "," + startY + ")");
-            System.out.println("End: (" + endX + "," + endY + ")");
-            if(playerMove(startY, startX, endY, endX)){
-                System.out.println("Successful Move!");
-                changeTurn(getCurrentPlayer());
+                this.getBoard().displayBoard(getCurrentPlayer());
+                board.displayMessage("        " +getBoard().getPiece(startY, startX).getColor() + " " + getBoard().getPiece(startY, startX).getName() + " Start Space: (" + startX + "," + startY + ") ");
+                System.out.println("Input end space X Axis number(Left to Right)");
+                int endX = scanner.nextInt();
+                System.out.println("Input end space Y Axis number(Top to Bottom)");
+                int endY = scanner.nextInt();
+                if(validSpace(startY, startX, endY, endX)){
+                    Piece originalPiece = board.getPiece(endY, endX);
 
-                if (getBoard().checkCheckMate(getBoard(), getCurrentPlayer())){
-                    System.out.println("True checkmate");
+                    if(playerMove(startY, startX, endY, endX)){
+                        this.getBoard().displayBoard(getCurrentPlayer());
+                        board.displayMessage("     Start Space: (" + startX + "," + startY + ") " + "End Space: (" + endX + "," + endY + ")");
+                        if(confirm()){
+                            board.displayMessage("               Successful Move!");
+                            this.getBoard().displayBoard(getCurrentPlayer());
+                            changeTurn(getCurrentPlayer());
+
+                            if (getBoard().checkCheckMate(getBoard(), getCurrentPlayer(), getEnemyPlayer())){
+                                board.displayMessage("True checkmate");
+                            }
+                            //Set check message
+                            if(getBoard().checkCheck(getBoard(), getCurrentPlayer())){
+                                board.displayMessage(getCurrentPlayer().getColor() + " in Check");
+                                getCurrentPlayer().setInCheck(true);
+                            }
+                        } else {
+                            board.getBox(startY, startX).setPiece(board.getBox(endY, endX).getPiece() );
+                            board.getBox(endY, endX).setPiece(originalPiece);
+                            board.displayMessage("Move Cancelled");
+                        }
+                    } else {
+                        board.displayMessage("Unsuccessful Move");
+                    }
+                } else {
+                    board.displayMessage("Unsuccessful Move");
                 }
-                //Set check message
-                if(getBoard().checkCheck(getBoard(), getCurrentPlayer())){
-                    System.out.println("\n         "+getCurrentPlayer().getColor() + " in Check\n");
-                    getCurrentPlayer().setInCheck(true);
-                }
-            } else {
-                System.out.println("Unsuccessful Move");
             }
         }
     }

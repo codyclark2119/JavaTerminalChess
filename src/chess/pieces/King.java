@@ -1,9 +1,8 @@
 package chess.pieces;
 
-import chess.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import chess.Board;
+import chess.Piece;
+import chess.Space;
 
 public class King extends Piece {
     private boolean castling = false;
@@ -21,55 +20,6 @@ public class King extends Piece {
         this.castling = castling;
     }
 
-    public boolean checkValidMovement(int x, int y) {
-        //Gets a space specifically if its in bounds
-        if (x < 0 || x > 7 || y < 0 || y > 7) {
-            return false;
-        }
-        return true;
-    }
-
-    public List possibleMoves(Board board, Space start, Player player){
-        //Getting the coordinates passed to check if
-        //movement is valid
-        int x = start.getX();
-        int y = start.getY();
-        //List holding all possible movements
-        List<Move> moves = new ArrayList<>();
-        // N
-        if(checkValidMovement(x-1,y) && canMove(board, start, board.getBox(x-1, y))) {
-            moves.add(new Move(player, start, board.getBox(x-1, y)));
-        }
-        // NE
-        if(checkValidMovement(x-1, y+1) && canMove(board, start, board.getBox(x-1, y+1))) {
-            moves.add(new Move(player, start, board.getBox(x-1, y + 1)));
-        }
-        // E
-        if(checkValidMovement(x,y+1) && canMove(board, start, board.getBox(x,y+1))) {
-            moves.add(new Move(player, start, board.getBox(x , y + 1)));
-        }
-        // SE
-        if(checkValidMovement(x+1,y+1) && canMove(board, start, board.getBox(x+1,y+1))) {
-            moves.add(new Move(player, start, board.getBox(x + 1, y + 1)));
-        }
-        // S
-        if(checkValidMovement(x+1,y) && canMove(board, start, board.getBox(x+1,y))) {
-            moves.add(new Move(player, start, board.getBox(x+1, y)));
-        }
-        // SW
-        if(checkValidMovement(x+1,y-1) && canMove(board, start, board.getBox(x+1,y-1))) {
-            moves.add(new Move(player, start, board.getBox(x + 1, y - 1)));
-        }
-        // W
-        if(checkValidMovement(x,y-1) && canMove(board, start, board.getBox(x,y-1))) {
-            moves.add(new Move(player, start, board.getBox(x, y-1)));
-        }
-        // NW
-        if(checkValidMovement(x-1,y-1) && canMove(board, start, board.getBox(x-1,y-1))) {
-            moves.add(new Move(player, start, board.getBox(x - 1, y - 1)));
-        }
-        return moves;
-    }
 
     @Override
     public boolean canMove(Board board, Space start, Space end){

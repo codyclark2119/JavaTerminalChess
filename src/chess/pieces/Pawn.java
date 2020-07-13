@@ -20,8 +20,8 @@ public class Pawn extends Piece {
         //Prevents a piece from moving across the y axis
         //and there is no enemy piece
         if (Math.abs(y) > 0) {
-            if (!this.diagonalMoveCheck(board, start, end)) {
-                return false;
+            if (this.diagonalMoveCheck(board, start, end)) {
+                return true;
             }
         }
         //Checking for valid first pawn two space movement
@@ -36,18 +36,13 @@ public class Pawn extends Piece {
             }
         }
         if(Math.abs(x) < 2){
+            //Prevents backwards moving
+            if((this.isWhite() && x == -1) || (!this.isWhite() && x == 1)){
+                return false;
+            }
             return this.verticalMoveCheck(board, start, end);
         }
-        //Prevents white backwards moving
-        if(this.getName() == "White" && x == 1){
-            System.out.println("Pawn fail 2");
-            return false;
-        }
-        //Prevents black backwards moving
-        if(this.getName() == "Black" && x == -1){
-            System.out.println("Pawn fail 3");
-            return false;
-        }
+
         //Successful check
         return false;
     }

@@ -6,26 +6,12 @@ import java.util.List;
 public class Game {
     private List<Move> movesPlayed = new ArrayList();
 
-    public void initialize(Player p1, Player p2) {
-        try {
-            System.out.println("\n           Game Start\n");
-            //Clearing any previous game moves.
-            if (movesPlayed.size() > 0) {
-                movesPlayed.clear();
-            }
-        } catch (Exception e) {
-            System.out.println("Initialization failure");
-        }
-    }
-
     public void listMoves() {
         //Print a line of each move played
         for(int i = 0; i < movesPlayed.size(); i++){
             System.out.println(movesPlayed.get(i).toString());
         }
     }
-
-
 
     public boolean makeMove(Board board, Move move, Player player) {
         try{
@@ -67,9 +53,6 @@ public class Game {
                     player.setInCheck(false);
                     // store the move in a list if out of check
                     movesPlayed.add(move);
-                    //Displays the board after each turn
-                    board.displayBoard();
-                    System.out.println("       Player Turn: " + player.getColor() + "\n");
                     return true;
                 } else {
                     System.out.println("\nFailed to move out of check\n");
@@ -87,9 +70,6 @@ public class Game {
                 //If was never in check goes ahead and
                 // stores the move in a list
                 movesPlayed.add(move);
-                //Displays the board after each turn
-                board.displayBoard();
-                System.out.println("       Player Turn: " + player.getColor()+ "\n");
                 return true;
             }
         } catch (Exception e){

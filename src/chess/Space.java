@@ -39,49 +39,49 @@ public class Space {
     public String toString(){
         String spaceString = "|";
         if (this.piece == null){
-            spaceString += "  |";
+            spaceString += "      |";
         } else {
             switch(this.piece.getName()){
                 case "Pawn":
                     if(this.piece.isWhite()){
-                        spaceString += "WP|";
+                        spaceString += "  WP  |";
                     } else {
-                        spaceString += "BP|";
+                        spaceString += "  BP  |";
                     }
                     break;
                 case "Knight":
                     if(this.piece.isWhite()){
-                        spaceString += "WN|";
+                        spaceString += "  WKn |";
                     } else {
-                        spaceString += "BN|";
+                        spaceString += "  BKn |";
                     }
                     break;
                 case "Rook":
                     if(this.piece.isWhite()){
-                        spaceString += "WR|";
+                        spaceString += "  WR  |";
                     } else {
-                        spaceString += "BR|";
+                        spaceString += "  BR  |";
                     }
                     break;
                 case "Bishop":
                     if(this.piece.isWhite()){
-                        spaceString += "WB|";
+                        spaceString += "  WB  |";
                     } else {
-                        spaceString += "BB|";
+                        spaceString += "  BB  |";
                     }
                     break;
                 case "Queen":
                     if(this.piece.isWhite()){
-                        spaceString += "WQ|";
+                        spaceString += "  WQ  |";
                     } else {
-                        spaceString += "BQ|";
+                        spaceString += "  BQ  |";
                     }
                     break;
                 case "King":
                     if(this.piece.isWhite()){
-                        spaceString += "WK|";
+                        spaceString += "  WK  |";
                     } else {
-                        spaceString += "BK|";
+                        spaceString += "  BK  |";
                     }
                     break;
             }

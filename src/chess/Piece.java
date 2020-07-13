@@ -1,9 +1,13 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Piece {
     private boolean moved = false;
     private boolean white = false;
     private String name = new String();
+    private boolean killed = false;
     private int x;
     private int y;
 
@@ -19,6 +23,14 @@ public abstract class Piece {
 
     public void setMoved(boolean moved) {
         this.moved = moved;
+    }
+
+    public boolean isKilled() {
+        return killed;
+    }
+
+    public void setKilled(boolean killed) {
+        this.killed = killed;
     }
 
     public int getX() {
@@ -64,6 +76,93 @@ public abstract class Piece {
     //individualized movement patterns
     public abstract boolean canMove(Board board, Space start, Space end);
 
+    public boolean checkValidMovement(int x, int y, Board board, Space start) {
+        //Gets a space specifically if its in bounds
+        if (x < 0 || x > 7 || y < 0 || y > 7) {
+            return false;
+        }
+
+        if(!canMove(board, start, board.getBox(x, y))){
+            return false;
+        }
+        return true;
+    }
+
+    public List possibleMoves(Board board, Space start, Player player){
+
+        //List holding all possible movements
+        List<Move> moves = new ArrayList<>();
+        for(int i = 0; i < 8; i++){
+            //Getting the coordinates passed to check if
+            //movement is valid
+            int x = start.getX();
+            int y = start.getY();
+            switch (i){
+                // N
+                case 0:
+                    while(checkValidMovement(x-1, y, board, start)){
+                        moves.add(new Move(player, start, board.getBox(x-1, y)));
+                        x--;
+                    }
+                    break;
+                // NE
+                case 1:
+                    while(checkValidMovement(x-1, y+1, board, start)){
+                        moves.add(new Move(player, start, board.getBox(x-1, y+1)));
+                        x--;
+                        y++;
+                    }
+                    break;
+                // E
+                case 2:
+                    while(checkValidMovement(x,y+1, board, start)){
+                        moves.add(new Move(player, start, board.getBox(x,y+1)));
+                        y++;
+                    }
+                    break;
+                // SE
+                case 3:
+                    while(checkValidMovement(x+1, y+1, board, start)){
+                        moves.add(new Move(player, start, board.getBox(x+1, y+1)));
+                        x++;
+                        y++;
+                    }
+                    break;
+                // S
+                case 4:
+                    while(checkValidMovement(x+1, y, board, start)){
+                        moves.add(new Move(player, start, board.getBox(x+1, y)));
+                        x++;
+                    }
+                    break;
+                // SW
+                case 5:
+                    while(checkValidMovement(x+1, y-1, board, start)){
+                        moves.add(new Move(player, start, board.getBox(x+1, y-1)));
+                        x++;
+                        y--;
+                    }
+                    break;
+                // W
+                case 6:
+                    while(checkValidMovement(x,y-1, board, start)){
+                        moves.add(new Move(player, start, board.getBox(x,y-1)));
+                        y--;
+                    }
+                    break;
+                // NW
+                case 7:
+                    while(checkValidMovement(x-1, y-1, board, start)){
+                        moves.add(new Move(player, start, board.getBox(x-1, y-1)));
+                        x--;
+                        y--;
+                    }
+                    break;
+            }
+        }
+        return moves;
+    }
+
     public boolean diagonalMoveCheck(Board board, Space start, Space end){
         try {
             //Getting the difference between coordinates passed to check if
@@ -102,6 +201,7 @@ public abstract class Piece {
                         else if (foundPiece.isWhite() != this.isWhite() && checkX != end.getX()) {
                             return false;
                         } else {
+                            foundPiece.setKilled(true);
                             //Allow attack if at the end point
                             return true;
                         }
@@ -153,6 +253,11 @@ public abstract class Piece {
                         else if (foundPiece.isWhite() != this.isWhite() && checkX != end.getX()) {
                             return false;
                         } else {
+                            //Doesn't allow any vertical movement for pawns to attack
+                            if (this.getName() == "Pawn") {
+                                return false;
+                            }
+                            foundPiece.setKilled(true);
                             //Otherwise successfully attacks and moves
                             return true;
                         }
@@ -201,6 +306,7 @@ public abstract class Piece {
                         else if(foundPiece.isWhite() != this.isWhite() && checkX != end.getX()){
                             return false;
                         } else {
+                            foundPiece.setKilled(true);
                             //Otherwise successfully attacks and moves
                             return true;
                         }
